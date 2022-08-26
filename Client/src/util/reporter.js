@@ -8,6 +8,8 @@ import XmlReporterForm from '../components/reporters/XmlReporterForm';
 import JsonReporterForm from '../components/reporters/JsonReporterForm';
 import Gff3ReporterForm from '../components/reporters/Gff3ReporterForm';
 import FastaGeneReporterForm from '../components/reporters/FastaGeneReporterForm';
+import BedGeneReporterForm from '../components/reporters/BedGeneReporterForm';
+import BedDynSpanReporterForm from '../components/reporters/BedDynSpanReporterForm';
 import FastaGenomicSequenceReporterForm from '../components/reporters/FastaGenomicSequenceReporterForm';
 import FastaOrfReporterForm from '../components/reporters/FastaOrfReporterForm';
 import FastaOrthoSequenceReporterForm from '../components/reporters/FastaOrthoSequenceReporterForm';
@@ -48,7 +50,23 @@ export function selectReporterComponent(reporterName, recordClassFullName) {
         case 'OrfRecordClasses.OrfRecordClass':
           return FastaOrfReporterForm;
         default:
-          console.error("Unsupported FASTA recordClass: " + recordClassName);
+          console.error("Unsupported FASTA recordClass: " + recordClassFullName);
+          return EmptyReporter;
+      }
+    case 'bed':
+      switch (recordClassFullName) {
+        // both gene and transcript use the same reporter
+        case 'GeneRecordClasses.GeneRecordClass':
+        case 'TranscriptRecordClasses.TranscriptRecordClass':
+          return BedGeneReporterForm;
+        case 'SequenceRecordClasses.SequenceRecordClass':
+          return FastaGenomicSequenceReporterForm;
+        case 'OrfRecordClasses.OrfRecordClass':
+          return FastaOrfReporterForm;
+        case 'DynSpanRecordClasses.DynSpanRecordClass':
+          return BedDynSpanReporterForm;
+        default:
+          console.error("Unsupported BED recordClass: " + recordClassFullName);
           return EmptyReporter;
       }
     case 'fasta':
